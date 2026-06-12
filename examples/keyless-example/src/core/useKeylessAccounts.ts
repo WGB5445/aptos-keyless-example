@@ -4,8 +4,7 @@
 import {
   EphemeralKeyPair,
   KeylessAccount,
-  ProofFetchStatus,
-} from "@aptos-labs/ts-sdk";
+} from "@aptos-labs/ts-sdk/keyless";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { LocalStorageKeys, devnetClient } from "./constants";
@@ -127,7 +126,7 @@ export const useKeylessAccounts = create<
           }
 
           // Create a handler to allow the proof to be computed asynchronously.
-          const proofFetchCallback = async (res: ProofFetchStatus) => {
+          const proofFetchCallback = async (res: { status: string }) => {
             if (res.status === "Failed") {
               get().disconnectKeylessAccount();
             } else {
