@@ -59,6 +59,10 @@ interface KeylessAccountsActions {
   ) => Promise<KeylessAccount | undefined>;
 }
 
+type ProofFetchResult =
+  | { status: "Success" }
+  | { status: "Failed"; error: string };
+
 const storage = createJSONStorage<KeylessAccountsState>(() => localStorage, {
   replacer: (_, e) => {
     if (typeof e === "bigint") return { __type: "bigint", value: e.toString() };
@@ -126,7 +130,7 @@ export const useKeylessAccounts = create<
           }
 
           // Create a handler to allow the proof to be computed asynchronously.
-          const proofFetchCallback = async (res: { status: string }) => {
+          const proofFetchCallback = async (res: ProofFetchResult) => {
             if (res.status === "Failed") {
               get().disconnectKeylessAccount();
             } else {
